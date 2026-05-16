@@ -1,0 +1,22 @@
+{
+  "name": "@uuaa/bzpos-login_module-bbom",
+  "version": "0.1.0",
+  "description": "Pilot UUAA login module (ports-first)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "fastify": "^5.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}
