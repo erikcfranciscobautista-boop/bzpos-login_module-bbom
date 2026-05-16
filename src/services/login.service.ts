@@ -125,7 +125,7 @@ export const createBbomLoginUseCase = (
 
       return BbomLoginOutputSchema.parse({ token });
     } catch (error) {
-      resolveMappedError(error);
+      throw resolveMappedError(error);
     }
   };
 };
