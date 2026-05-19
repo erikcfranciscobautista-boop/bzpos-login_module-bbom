@@ -1,13 +1,8 @@
 import { buildLoginController } from "../controllers/login.controller.js";
-import { createBbomLoginUseCase } from "../../services/login.service.js";
-import { type BbomLoginPorts } from "../../services/login.ports.js";
+import { createBbomLoginUseCase } from "../services/login.service.js";
 
-export type BuildLoginDependenciesInput = {
-  ports: BbomLoginPorts;
-};
-
-export const buildLoginDependencies = ({ ports }: BuildLoginDependenciesInput) => {
-  const loginUseCase = createBbomLoginUseCase(ports);
+export const buildLoginDependencies = () => {
+  const loginUseCase = createBbomLoginUseCase();
 
   return buildLoginController({
     loginUseCase

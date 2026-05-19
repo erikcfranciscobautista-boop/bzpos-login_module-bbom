@@ -1,4 +1,4 @@
-export const loginSchema = {
+export const loginSwaggerSchema = {
   tags: ["auth"],
   summary: "Authenticate user",
   body: {

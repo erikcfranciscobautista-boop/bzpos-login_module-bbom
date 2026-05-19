@@ -2,11 +2,12 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { type BbomLoginInput } from "../../models/dto/input/login.dto.js";
 import { type BbomLoginOutput } from "../../models/dto/output/login.dto.js";
-import { isBurmLoginError } from "../../services/login.error.js";
+import { isBurmLoginError } from "../services/login.error.js";
 import {
   buildLoginServiceErrorPayload,
   type createBbomLoginUseCase
-} from "../../services/login.service.js";
+} from "../services/login.service.js";
+import { getBbomLoginAdapters } from "../services/login.contracts.js";
 
 type LoginUseCase = ReturnType<typeof createBbomLoginUseCase>;
 
@@ -22,7 +23,8 @@ export const buildLoginController = ({
 
     try {
       const input = request.body as BbomLoginInput;
-      const result: BbomLoginOutput = await loginUseCase(input);
+      const adapters = getBbomLoginAdapters(request.server);
+      const result: BbomLoginOutput = await loginUseCase(input, adapters);
 
       request.log.info({ fn: "LOGIN_CONTROLLER.loginController" }, "Function success");
       await reply.send(result);
