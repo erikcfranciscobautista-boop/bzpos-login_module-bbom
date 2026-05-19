@@ -2,12 +2,12 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { type BbomLoginInput } from "../../models/dto/input/login.dto.js";
 import { type BbomLoginOutput } from "../../models/dto/output/login.dto.js";
-import { isBurmLoginError } from "../services/login.error.js";
+import { type createBbomLoginUseCase } from "../services/login.service.js";
+import { getBbomLoginAdapters } from "../services/login.contracts.js";
 import {
   buildLoginServiceErrorPayload,
-  type createBbomLoginUseCase
-} from "../services/login.service.js";
-import { getBbomLoginAdapters } from "../services/login.contracts.js";
+  isBurmLoginError
+} from "../services/login.errors.js";
 
 type LoginUseCase = ReturnType<typeof createBbomLoginUseCase>;
 
@@ -37,11 +37,7 @@ export const buildLoginController = ({
         return;
       }
 
-      await reply.status(503).send({
-        errorCode: "BBOM-INFRA-002",
-        message: "Unexpected error while processing login",
-        details: "unexpected error while processing login"
-      });
+      await reply.status(503).send(buildLoginServiceErrorPayload("UNKNOWN_LOGIN_ERROR", error));
     }
   };
 };

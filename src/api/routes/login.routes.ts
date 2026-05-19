@@ -18,7 +18,10 @@ export const loginRoutes: FastifyPluginAsync = async (app) => {
     "/login",
     {
       schema: loginSwaggerSchema,
-      preHandler: [createZodValidationPreHandler({ body: BbomLoginInputSchema })]
+      preHandler: [createZodValidationPreHandler({
+        body: BbomLoginInputSchema,
+        bodyRequiredFields: ["username", "password"]
+      })]
     },
     loginController
   );

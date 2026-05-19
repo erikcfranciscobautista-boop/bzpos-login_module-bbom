@@ -6,25 +6,46 @@ type ValidationTargets = {
   params?: ZodTypeAny;
   querystring?: ZodTypeAny;
   headers?: ZodTypeAny;
+  bodyRequiredFields?: string[];
+};
+
+const resolveMissingFields = (
+  payload: unknown,
+  segment: keyof ValidationTargets,
+  fallbackRequiredFields: string[]
+): string[] => {
+  if (segment !== "body") {
+    return [];
+  }
+
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return fallbackRequiredFields;
+  }
+
+  const bodyPayload = payload as Record<string, unknown>;
+  return fallbackRequiredFields.filter((field) => bodyPayload[field] === undefined || bodyPayload[field] === null);
 };
 
 const validateOrReply = (
   schema: ZodTypeAny,
   payload: unknown,
   segment: keyof ValidationTargets,
+  bodyRequiredFields: string[],
   request: FastifyRequest,
   reply: FastifyReply
 ): boolean => {
   const parsed = schema.safeParse(payload);
 
   if (!parsed.success) {
+    const missing = resolveMissingFields(payload, segment, bodyRequiredFields);
+
     void reply.status(400).send({
-      errorCode: "BBOM-INPUT-001",
-      message: "Invalid request format",
-      details: {
-        segment,
-        issues: parsed.error.issues,
-        route: request.url
+      errorType: "CLIENT_ERROR",
+      errorCode: "BBOM-CLIENT-0001",
+      detail: {
+        traceError: "0000-INVALID-ARGUMENTS",
+        message: "Credenciales invalidas",
+        missing
       }
     });
 
@@ -41,22 +62,24 @@ export const createZodValidationPreHandler = (
   targets: ValidationTargets
 ): preHandlerHookHandler => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
-    if (targets.body && !validateOrReply(targets.body, request.body, "body", request, reply)) {
+    const bodyRequiredFields = targets.bodyRequiredFields ?? [];
+
+    if (targets.body && !validateOrReply(targets.body, request.body, "body", bodyRequiredFields, request, reply)) {
       return reply;
     }
 
-    if (targets.params && !validateOrReply(targets.params, request.params, "params", request, reply)) {
+    if (targets.params && !validateOrReply(targets.params, request.params, "params", [], request, reply)) {
       return reply;
     }
 
     if (
       targets.querystring
-      && !validateOrReply(targets.querystring, request.query, "querystring", request, reply)
+      && !validateOrReply(targets.querystring, request.query, "querystring", [], request, reply)
     ) {
       return reply;
     }
 
-    if (targets.headers && !validateOrReply(targets.headers, request.headers, "headers", request, reply)) {
+    if (targets.headers && !validateOrReply(targets.headers, request.headers, "headers", [], request, reply)) {
       return reply;
     }
   };
