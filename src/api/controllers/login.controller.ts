@@ -19,17 +19,17 @@ export const buildLoginController = ({
   loginUseCase
 }: BuildLoginControllerDependencies) => {
   return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    request.log.info({ fn: "LOGIN_CONTROLLER.loginController" }, "Function start");
+    request.log.info({ fn: "LOGIN_CONTROLLER - bzpos-login_module-bbom -" }, "Function start");
 
     try {
       const input = request.body as BbomLoginInput;
       const adapters = getBbomLoginAdapters(request.server);
-      const result: BbomLoginOutput = await loginUseCase(input, adapters);
+      const result: BbomLoginOutput = await loginUseCase(input, adapters, request.log);
 
-      request.log.info({ fn: "LOGIN_CONTROLLER.loginController" }, "Function success");
+      request.log.info({ fn: "LOGIN_CONTROLLER - bzpos-login_module-bbom -" }, "Function success");
       await reply.send(result);
     } catch (error) {
-      request.log.error({ fn: "LOGIN_CONTROLLER.loginController", err: error }, "Function error");
+      request.log.error({ fn: "LOGIN_CONTROLLER - bzpos-login_module-bbom -", err: error }, "Function error");
 
       if (isBurmLoginError(error)) {
         const statusCode = error.statusCode === 403 || error.statusCode === 404 ? 401 : error.statusCode;

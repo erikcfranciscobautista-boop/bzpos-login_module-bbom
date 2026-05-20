@@ -31,9 +31,15 @@ export type BbomLoginAdapters = {
   postBurmLoginToken: (claims: BurmClaimsDto) => Promise<{ token?: unknown } | unknown>;
 };
 
+export type BbomLoginLogger = {
+  info: (context: Record<string, unknown>, message: string) => void;
+  error: (context: Record<string, unknown>, message: string) => void;
+};
+
 export type BbomLoginUseCase = (
   input: BbomLoginInput,
-  adapters: BbomLoginAdapters
+  adapters: BbomLoginAdapters,
+  logger: BbomLoginLogger
 ) => Promise<BbomLoginOutput>;
 
 declare module "fastify" {
