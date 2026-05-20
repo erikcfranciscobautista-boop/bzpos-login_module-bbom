@@ -2,6 +2,10 @@
 
 Este modulo expone un unico plugin de rutas: `loginRoutes`.
 
+## Documentacion complementaria
+
+- [BBOM Components](docs/BBOM-COMPONENTS.md): guia para separar funcionalidades BBOM como componentes desacoplados tipo "piezas de lego".
+
 ## Uso
 
 ```ts
