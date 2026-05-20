@@ -27,9 +27,9 @@ export const createBbomLoginUseCase = (): BbomLoginUseCase => {
 
     const parsedInput = BbomLoginInputSchema.parse(input);
 
-    return resolveIdentityRepository(adapters, parsedInput)
-      .then((identity) => resolveTokenClaimsRepository(adapters, identity))
-      .then((tokenClaims) => resolveTokenRepository(adapters, tokenClaims))
+    return resolveIdentityRepository(adapters, parsedInput, logger)
+      .then((identity) => resolveTokenClaimsRepository(adapters, identity, logger))
+      .then((tokenClaims) => resolveTokenRepository(adapters, tokenClaims, logger))
       .then((token) => {
         logger.info({ fn: "LOGIN_USE_CASE - bzpos-login_module-bbom -" }, "Function success");
         return BbomLoginOutputSchema.parse({ token });
