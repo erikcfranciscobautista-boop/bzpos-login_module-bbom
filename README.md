@@ -42,7 +42,7 @@ Responsabilidad por capa:
 
 ```ts
 import Fastify from "fastify";
-import { loginRoutes } from "@uuaa/bzpos-login_module-bbom";
+import { loginRoutes } from "@bbom/bzpos-login_module-bbom";
 
 const app = Fastify();
 
@@ -65,6 +65,13 @@ app.decorate("bbomLoginAdapters", {
 app.decorate("loginModuleRoutesBbom", true);
 app.register(loginRoutes, { prefix: "/api" });
 ```
+
+## Convencion de publicacion npm
+
+- Scope obligatorio para componentes BBOM: `@bbom`.
+- Formato recomendado: `@bbom/bzpos-<functionality>_module-bbom`.
+- Ejemplos: `@bbom/bzpos-login_module-bbom`, `@bbom/bzpos-forgot_password_module-bbom`.
+- Resultado de instalacion: el paquete queda bajo `node_modules/@bbom/`.
 
 ## Endpoint
 
