@@ -1,7 +1,7 @@
 {
-  "name": "@uuaa/bzpos-login_module-bbom",
+  "name": "@bbom/bzpos-login_module-bbom",
   "version": "0.1.0",
-  "description": "Pilot UUAA login module (ports-first)",
+  "description": "Pilot BBOM login module (ports-first)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
